@@ -2,9 +2,10 @@ import sys
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, GenerationConfig
 
 # line = 'What color is the undoubtedly beautiful sky?'
-# line = 'anything but anything'
 
-model_name = 'google/flan-t5-xl'
+model_name = 'google/flan-t5-base'
+# model_name = 'google/flan-t5-xl'
+
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
 config = GenerationConfig(max_new_tokens=200)
