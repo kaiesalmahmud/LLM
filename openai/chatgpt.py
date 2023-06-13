@@ -1,4 +1,5 @@
 import openai
+import sys
 
 def read_api_key():
     with open('key.txt', 'r') as file:
@@ -21,8 +22,14 @@ def complete_prompt(prompt):
     reply = response.choices[0].message.content
     return reply
 
-# Example usage
-prompt = "What is the capital of France?"
-completed_prompt = complete_prompt(prompt)
+# # Example usage
+# prompt = "What is the capital of France?"
+# completed_prompt = complete_prompt(prompt)
 
-print(completed_prompt)
+# print(completed_prompt)
+
+for line in sys.stdin:
+
+    completed_prompt = complete_prompt(line)
+
+    print(completed_prompt)
