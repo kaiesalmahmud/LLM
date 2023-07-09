@@ -84,6 +84,29 @@ def connect_to_database(host, port, username, password, database):
     )
     return conn
 
+def sqlout(cursor,query):
+    
+    cursor.execute(query)
+
+    # Given column information
+    column_info = list(cursor.description)
+
+    # Extract column names
+    column_names = [column.name for column in column_info]
+
+    # Create a DataFrame
+    df = pd.DataFrame(columns=range(len(column_names)))
+
+    # Fetch all the rows returned by the query
+
+    rows = cursor.fetchall()
+    df=df.from_records(rows).astype(str)
+
+    # Set column names as column headers
+    df.columns = column_names
+    st.text(query)
+    st.dataframe(df,width=None)
+
 # Create the sidebar for DB connection parameters
 st.sidebar.header("Database Connection")
 host = st.sidebar.text_input("Host", value="localhost")
@@ -118,13 +141,6 @@ query_button = st.button("Submit")
 # Execute the query when the submit button is clicked
 if query_button:
     if connection:
-        # Execute the query and get the results as a dataframe
-        try:
-            query = get_query(question)
-            results_df = execute_query(query, connection)
-        except:
-            st.error("Failed to execute query")
-
 
         # Display the results as text outputs
         #st.subheader("Text Outputs")
@@ -133,4 +149,9 @@ if query_button:
         st.text("SQL Executed")
 
         # Display the results as a dataframe
-        st.dataframe(results_df)
+        # Execute the query and get the results as a dataframe
+        try:
+            query = get_query(question)
+            results_df = sqlout(connection.cursor(), query)
+        except:
+            st.error("Failed to execute query")
