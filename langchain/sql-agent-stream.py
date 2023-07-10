@@ -54,8 +54,12 @@ Query: SELECT "Retail Name",
        ORDER BY TotalTime DESC 
        LIMIT 5
 
-Question: How many shops performed less than 100%?
-Query: SELECT COUNT(DISTINCT "Retail Name") FROM "monthWise" WHERE "Efficiency %" < 100
+Question: What is the name of the retail with the highest average efficiency?
+Query: SELECT "Retail Name", AVG("Efficiency %") as AverageEfficiency 
+       FROM "monthWise" 
+       GROUP BY "Retail Name" 
+       ORDER BY AverageEfficiency DESC 
+       LIMIT 1
 """
 
 SQL_FUNCTIONS_SUFFIX = """I should look at the tables in the database to see what I can query.  Then I should query the schema of the most relevant tables."""
@@ -135,6 +139,8 @@ submit_button = st.sidebar.checkbox("Connect")
 # Create the main panel
 st.title("Database Query Application")
 
+connection = None
+
 # Check if the submit button is clicked and establish the database connection
 if submit_button:
     try:
@@ -162,21 +168,23 @@ if query_button:
         #st.subheader("Text Outputs")
         # st.text("Refined Question")
         # st.text("Tables Used")
-        st.text("Calculating...")
+        # st.text("Calculating...")
 
         # Display the results as a dataframe
         # Execute the query and get the results as a dataframe
         try:
-            sql_query, message, answer = get_response(question)
+            with st.spinner('Calculating...'):
+                sql_query, message, answer = get_response(question)
             # st.subheader("SQL Query")
             # st.text(sql_query)
             # st.text("Message")
             # st.text(message)
-            st.subheader("Answer")
+            st.subheader("Answer  :robot_face:")
             st.write(answer)
             # results_df = sqlout(connection, sql_query)
+            st.info(":coffee:    Did that answer your question? If not, try to be more specific.")
         except:
-            st.text("Please enter a valid question. Try to be as specific as possible.")
+            st.write("Please enter a valid question. Try to be as specific as possible.")
 
     else:
         st.text("Please connect to the database first.")
