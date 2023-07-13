@@ -45,21 +45,14 @@ DO NOT make any DML statements (INSERT, UPDATE, DELETE, DROP etc.) to the databa
 If the question does not seem related to the database, just return "I don't know" as the answer.
 
 SQL query format example:
-Question: "Who are the top 5 retailers for the month of May?"
-Query: SELECT "Retail Name", 
-       SUM("Total Play time Minutes") as TotalTime 
-       FROM "monthWise" 
+Question: "Who are the top 5 retailers for the month of May in terms of total play time?"
+Query: SELECT "Retail Name", SUM("Total Play time") as total_play_time 
+       FROM "dailyLog" 
        WHERE EXTRACT(MONTH FROM "Date") = 5 
        GROUP BY "Retail Name" 
-       ORDER BY TotalTime DESC 
+       ORDER BY total_play_time DESC 
        LIMIT 5
 
-Question: What is the name of the retail with the highest average efficiency?
-Query: SELECT "Retail Name", AVG("Efficiency %") as AverageEfficiency 
-       FROM "monthWise" 
-       GROUP BY "Retail Name" 
-       ORDER BY AverageEfficiency DESC 
-       LIMIT 1
 """
 
 SQL_FUNCTIONS_SUFFIX = """I should look at the tables in the database to see what I can query.  Then I should query the schema of the most relevant tables."""
@@ -128,7 +121,7 @@ agent_executor = create_sql_agent(
 )
 
 # Create the sidebar for DB connection parameters
-st.sidebar.header("Database Connection")
+st.sidebar.header("Connect Your Database")
 host = st.sidebar.text_input("Host", value="localhost")
 port = st.sidebar.text_input("Port", value="5432")
 username = st.sidebar.text_input("Username", value="postgres")
@@ -137,7 +130,7 @@ database = st.sidebar.text_input("Database", value="ReportDB")
 submit_button = st.sidebar.checkbox("Connect")
 
 # Create the main panel
-st.title("Database Query Application")
+st.title("DB Connect :cyclone:")
 
 connection = None
 
@@ -154,8 +147,20 @@ if submit_button:
     else:
         st.sidebar.error("Failed to connect to the database. Please check your connection parameters.")
 
+st.text("""FAQs:
+1. Describe the database.
+2. What is the timeline of the data present?
+3. What is the average total play time for the month of April?
+4. Who are the top 5 retailers for the month of May in terms of total play time?
+5. How many areas are the shops located at?
+6. What is the combined total play time for 5th May?.
+7. List the top 5 areas with least average efficiency.
+8. List of most not opened shops for the month of April.
+9. Which shops has most count of playtime of less than 10 hours?
+10. Which shops has the most count of start time after 10 am?""")
+
 # Get the user's natural question input
-question = st.text_input("Enter your question", placeholder="eg. Describe the databese.")
+question = st.text_input("Ask a question:", placeholder="Enter your question")
 
 # Create a submit button for executing the query
 query_button = st.button("Submit")
@@ -164,27 +169,18 @@ query_button = st.button("Submit")
 if query_button:
     if connection:
 
-        # Display the results as text outputs
-        #st.subheader("Text Outputs")
-        # st.text("Refined Question")
-        # st.text("Tables Used")
-        # st.text("Calculating...")
-
         # Display the results as a dataframe
         # Execute the query and get the results as a dataframe
         try:
             with st.spinner('Calculating...'):
                 sql_query, message, answer = get_response(question)
-            # st.subheader("SQL Query")
-            # st.text(sql_query)
-            # st.text("Message")
-            # st.text(message)
-            st.subheader("Answer  :robot_face:")
+
+            st.subheader("Answer :robot_face:")
             st.write(answer)
             # results_df = sqlout(connection, sql_query)
-            st.info(":coffee:    Did that answer your question? If not, try to be more specific.")
+            st.info(":coffee: _Did that answer your question? If not, try to be more specific._")
         except:
-            st.write("Please enter a valid question. Try to be as specific as possible.")
+            st.warning(":wave: Please enter a valid question. Try to be as specific as possible.")
 
     else:
-        st.text("Please connect to the database first.")
+        st.warning(":wave: Please connect to the database first.")
