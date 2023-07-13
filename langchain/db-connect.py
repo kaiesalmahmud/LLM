@@ -155,7 +155,7 @@ st.text("""
 3. What is the average total play time for the month of April?
 4. Who are the top 5 retailers for the month of May in terms of total play time?
 5. How many areas are the shops located at?
-6. What is the combined total play time for 5th May?.
+6. What is the combined total play time for 5th May?
 7. List the top 5 areas with least average efficiency.
 8. List of most not opened shops for the month of April.
 9. Which shops has most count of playtime of less than 10 hours?
