@@ -131,6 +131,7 @@ submit_button = st.sidebar.checkbox("Connect")
 
 # Create the main panel
 st.title("DB Connect :cyclone:")
+st.subheader("Connect your database and ask questions!!")
 
 connection = None
 
@@ -146,8 +147,9 @@ if submit_button:
         st.sidebar.success("Connected to the database!")
     else:
         st.sidebar.error("Failed to connect to the database. Please check your connection parameters.")
-
-st.text("""FAQs:
+st.divider()
+st.write("*--Frequently Asked--*")
+st.text("""
 1. Describe the database.
 2. What is the timeline of the data present?
 3. What is the average total play time for the month of April?
@@ -157,10 +159,12 @@ st.text("""FAQs:
 7. List the top 5 areas with least average efficiency.
 8. List of most not opened shops for the month of April.
 9. Which shops has most count of playtime of less than 10 hours?
-10. Which shops has the most count of start time after 10 am?""")
+10. Which shops has the most count of start time after 10 am?
+""")
+st.divider()
 
 # Get the user's natural question input
-question = st.text_input("Ask a question:", placeholder="Enter your question")
+question = st.text_input(":blue[Ask a question:]", placeholder="Enter your question")
 
 # Create a submit button for executing the query
 query_button = st.button("Submit")
