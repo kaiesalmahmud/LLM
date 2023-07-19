@@ -17,11 +17,17 @@ os.environ["OPENAI_API_KEY"] = API_KEY
 from dotenv import load_dotenv
 load_dotenv()
 
-host="localhost"
+# host="localhost"
+# port="5432"
+# database="ReportDB"
+# user="postgres"
+# password="postgres"
+
+host="ep-wispy-forest-393400.ap-southeast-1.aws.neon.tech"
 port="5432"
-database="ReportDB"
-user="postgres"
-password="postgres"
+database="neondb"
+user="db_user"
+password="UdH3VeKu7Cik"
 
 db = SQLDatabase.from_uri(f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}")
 
@@ -43,15 +49,6 @@ You MUST double check your query before executing it. If you get an error while 
 DO NOT make any DML statements (INSERT, UPDATE, DELETE, DROP etc.) to the database.
 
 If the question does not seem related to the database, just return "I don't know" as the answer.
-
-SQL query format example:
-Question: "Who are the top 5 retailers for the month of May in terms of total play time?"
-Query: SELECT "Retail Name", SUM("Total Play time") as total_play_time 
-       FROM "dailyLog" 
-       WHERE EXTRACT(MONTH FROM "Date") = 5 
-       GROUP BY "Retail Name" 
-       ORDER BY total_play_time DESC 
-       LIMIT 5
 
 """
 
@@ -121,19 +118,35 @@ agent_executor = create_sql_agent(
 )
 
 # Create the sidebar for DB connection parameters
-st.sidebar.header("Connect Your Database")
-host = st.sidebar.text_input("Host", value="localhost")
-port = st.sidebar.text_input("Port", value="5432")
-username = st.sidebar.text_input("Username", value="postgres")
-password = st.sidebar.text_input("Password", value="postgres")
-database = st.sidebar.text_input("Database", value="ReportDB")
-submit_button = st.sidebar.checkbox("Connect")
+st.sidebar.header("Choose Database")
 
 # Create the main panel
 st.title("DB Connect :cyclone:")
 st.subheader("Connect your database and ask questions!!")
 
 connection = None
+
+side_button_01 = st.sidebar.button("ReportDB")
+side_button_02 = st.sidebar.button("AccountsDB")
+
+if side_button_01:
+
+    host="localhost"
+    port="5432"
+    database="ReportDB"
+    user="postgres"
+    password="postgres"
+
+elif side_button_02:
+
+    host="ep-wispy-forest-393400.ap-southeast-1.aws.neon.tech"
+    port="5432"
+    database="neondb"
+    user="db_user"
+    password="UdH3VeKu7Cik"
+
+
+submit_button = st.sidebar.checkbox("Connect")
 
 # Check if the submit button is clicked and establish the database connection
 if submit_button:
@@ -147,21 +160,7 @@ if submit_button:
         st.sidebar.success("Connected to the database!")
     else:
         st.sidebar.error("Failed to connect to the database. Please check your connection parameters.")
-st.divider()
-st.write("*--Frequently Asked--*")
-st.text("""
-1. Describe the database.
-2. What is the timeline of the data present?
-3. What is the average total play time for the month of April?
-4. Who are the top 5 retailers for the month of May in terms of total play time?
-5. How many areas are the shops located at?
-6. What is the combined total play time for 5th May?
-7. List the top 5 areas with least average efficiency.
-8. List of most not opened shops for the month of April.
-9. Which shops has most count of playtime of less than 10 hours?
-10. Which shops has the most count of start time after 10 am?
-""")
-st.divider()
+
 
 # Get the user's natural question input
 question = st.text_input(":blue[Ask a question:]", placeholder="Enter your question")
