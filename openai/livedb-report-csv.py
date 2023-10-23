@@ -14,14 +14,24 @@ conn = psycopg2.connect(
 # Create a cursor object to interact with the database
 cursor = conn.cursor()
 
-cursor.execute("""
-    SET TIMEZONE TO 'Asia/Dhaka';
-""");
+# cursor.execute("""
+#     SET TIMEZONE TO 'Asia/Dhaka';
+# """);
 
 start_date = "'2023-10-15'"
 end_date = start_date
 
+# from datetime import date, timedelta
+
+# yesterday = str(date.today() - timedelta(days=1))
+# yesterday = "'"+yesterday+"'"
+
+# start_date = "'2023-07-01'"
+# end_date = yesterday
+
 base_query = f"""
+
+SET TIMEZONE TO 'Asia/Dhaka';
 
 WITH "on_beats" as (
     SELECT
@@ -369,6 +379,21 @@ for zone, code, store in rows:
     data_dict[zone]['Name of After 11AM'] += f'{code} : {store}, \n'
     # print(zone, code, store)
 
+######################################
+cursor.execute(test_query)
+
+# Fetch all the rows returned by the query
+results = cursor.fetchall()
+
+# Fetch column names
+column_names = [desc[0] for desc in cursor.description]
+
+# Render the output
+print("| " + " | ".join(column_names) + " |")
+print("|-" + "-|-".join(["-" * len(name) for name in column_names]) + "-|")
+for row in results:
+    print("| " + " | ".join(map(str, row)) + " |")
+
 # Remove the trailing comma and space from each dictionary value
 for zone in data_dict.keys():
     try:
@@ -426,8 +451,8 @@ df = df.reindex(['Number of Shops',
             'Name of After 11AM'
             ])
 
-print(df)
-df.to_csv('data.csv')
+# print(df)
+# df.to_csv('data.csv')
 
 # Close the cursor and the connection
 cursor.close()
