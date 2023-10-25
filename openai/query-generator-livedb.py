@@ -123,6 +123,16 @@ message_history = [{"role": "user",
                     WHERE EXTRACT(HOUR FROM "Started") >= 10 AND EXTRACT(HOUR FROM "Started") < 11 AND "Date" = '2023-10-15'
                     GROUP BY "zone_name"
 
+                    8.
+                    Question:
+                    Which shop had the highest efficiency on 15th October?
+                    Query:
+                    SELECT "point_name", MAX("Efficiency")
+                    FROM "dailyLog"
+                    WHERE "Date" = '2023-10-15' AND "Efficiency" IS NOT NULL
+                    GROUP BY "point_name"
+                    ORDER BY MAX("Efficiency") DESC
+
                     ---------------------------------------------
 
                     I will ask a question about the data in natural language in my message, and you will reply only with a SQL query 
@@ -286,9 +296,9 @@ while True:
     question = input("Human: ")
 
     print()
-    print("Bot: ")
+    print("Bot: \n")
     query = generate_query(question)
     print("Query:\n"+ query)
-    print("Answer:")
+    print("\nAnswer:")
     execute_query(query)
     # print(message_history)
