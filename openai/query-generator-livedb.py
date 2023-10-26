@@ -300,5 +300,11 @@ while True:
     query = generate_query(question)
     print("Query:\n"+ query)
     print("\nAnswer:")
-    execute_query(query)
-    # print(message_history)
+
+    # execute_query(query)
+
+    try:
+        execute_query(query)
+    except Exception as e:
+        # print(e)
+        print("Invalid question. Please try again.")
