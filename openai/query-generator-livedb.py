@@ -44,10 +44,10 @@ message_history = [{"role": "user",
                     total_playtime_minutes: A numeric field representing the total play time in minutes.
                     Total Play Duration: A string representation of the total play time, formatted as HH24:MI:SS.
                     Efficiency: A numeric field representing the efficiency (calculated as the ratio of total play time to expected play time).
-                    total_offline_time_seconds: A numeric field representing the total offline time in seconds.
-                    Offline Play Duration: A string representation of the total offline time, formatted as HH24:MI:SS.
-                    off_time_seconds: A numeric field representing the off time in seconds.
-                    Box Off Duration: A string representation of the off time, formatted as HH24:MI:SS.
+                    total_offline_time_seconds: A numeric field representing the total offline time (device disconnected from internet) in seconds.
+                    Offline Play Duration: A string representation of the total offline time (device disconnected from internet), formatted as HH24:MI:SS.
+                    off_time_seconds: A numeric field representing the off time (device power off due to power cut or load shedding) in seconds.
+                    Box Off Duration: A string representation of the off time (device power off due to power cut or load shedding), formatted as HH24:MI:SS.
                     Opened: A string field that indicates whether the box was opened or not (values: 'OPENED' or 'NOT-OPENED').
 
                     
